@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using PropertyChanged;
 
 namespace ExcelLab.Table;
 
+[AddINotifyPropertyChangedInterface]
 public class Row
 {
     private static int _rowCount = 0;

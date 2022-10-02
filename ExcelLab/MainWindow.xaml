@@ -5,12 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ExcelLab"
         xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
+        xmlns:Views="clr-namespace:ExcelLab.Views"
         mc:Ignorable="d"
         Title="ExcelLab" Height="450" Width="800">
     <Window.DataContext>
         <local:TableViewModel />
     </Window.DataContext>
-    
+    <Window.Resources>
+        <DataTemplate DataType="local:TableViewModel">
+            <Views:Menu/>
+        </DataTemplate>
+    </Window.Resources>
         <DockPanel>
             <StackPanel DockPanel.Dock="Top">
                 <Menu>
@@ -42,7 +47,7 @@
                 </Border>
             </StackPanel>
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                <DataGrid RowHeaderWidth="25" LoadingRow="TableDataGrid_OnLoadingRow" RowHeight="30" x:Name="TableDataGrid" SelectionMode="Single" SelectionUnit="Cell" CanUserAddRows="False" CanUserSortColumns="False"  CanUserReorderColumns="False" AutoGenerateColumns="False" ItemsSource="{Binding TableRows}">
+                <DataGrid RowHeaderWidth="25" LoadingRow="TableDataGrid_OnLoadingRow" RowHeight="30" SelectionMode="Single" SelectionUnit="Cell" CanUserAddRows="False" CanUserSortColumns="False"  CanUserReorderColumns="False" AutoGenerateColumns="False" ItemsSource="{Binding Table.Rows}">
                     <DataGrid.CellStyle>
                         <Style TargetType="DataGridCell">
                             <Setter Property="FontSize" Value="12"/>

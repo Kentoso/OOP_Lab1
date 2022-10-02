@@ -1,7 +1,8 @@
 ﻿using System.Diagnostics;
+using PropertyChanged;
 
 namespace ExcelLab;
-
+[AddINotifyPropertyChangedInterface]
 public class Cell
 {
     public int Row { get; set; }
