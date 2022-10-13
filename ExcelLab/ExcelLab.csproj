@@ -11,4 +11,8 @@
       <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
       <PackageReference Include="PropertyChanged.Fody" Version="4.0.3" />
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ExcelLab.Parser\ExcelLab.Parser.csproj" />
+    </ItemGroup>
 </Project>

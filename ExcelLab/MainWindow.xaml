@@ -15,6 +15,7 @@
         <DataTemplate DataType="local:TableViewModel">
             <Views:Menu/>
         </DataTemplate>
+        <local:CellContentConverter x:Key="CellContentConverter"/>
     </Window.Resources>
         <DockPanel>
             <StackPanel DockPanel.Dock="Top">
@@ -33,7 +34,7 @@
                             <ColumnDefinition Width="3*" />
                         </Grid.ColumnDefinitions>
                         <TextBox Height="24" FontSize="14" VerticalAlignment="Center" Grid.Column="1"
-                                 Text="{Binding CurrentCell.Content, UpdateSourceTrigger=PropertyChanged}">
+                                 Text="{Binding CurrentCell.ViewContent, UpdateSourceTrigger=PropertyChanged}">
                             <TextBox.Style>
                                 <Style TargetType="TextBox">
                                     <Style.Triggers>
@@ -42,6 +43,16 @@
                                     </Style.Triggers>
                                 </Style>
                             </TextBox.Style>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction PassEventArgsToCommand="True"
+                                                           Command="{Binding CellEditEndedCommand}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction PassEventArgsToCommand="True"
+                                                           Command="{Binding CellEditBeganCommand}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
                         </TextBox>
                     </Grid>
                 </Border>
@@ -84,6 +95,14 @@
                         <i:EventTrigger EventName="Loaded">
                             <i:InvokeCommandAction PassEventArgsToCommand="True"
                                                    Command="{Binding DataGridLoadedCommand}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="BeginningEdit">
+                            <i:InvokeCommandAction PassEventArgsToCommand="True"
+                                                   Command="{Binding CellEditBeganCommand}" />
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="CellEditEnding">
+                            <i:InvokeCommandAction PassEventArgsToCommand="True"
+                                                   Command="{Binding CellEditEndedCommand}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     

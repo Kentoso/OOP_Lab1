@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelLab", "ExcelLab\ExcelLab.csproj", "{B8A246C5-6186-4ADF-9AC8-8BFA1EFB07D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParserTests", "ParserTests\ParserTests.csproj", "{D1133EE3-FBE3-42BE-B854-B8E8268840EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelLab.Parser", "ExcelLab.Parser\ExcelLab.Parser.csproj", "{92544B40-16BC-404B-850E-3733531998A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,13 @@ Global
 		{B8A246C5-6186-4ADF-9AC8-8BFA1EFB07D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8A246C5-6186-4ADF-9AC8-8BFA1EFB07D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8A246C5-6186-4ADF-9AC8-8BFA1EFB07D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1133EE3-FBE3-42BE-B854-B8E8268840EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1133EE3-FBE3-42BE-B854-B8E8268840EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1133EE3-FBE3-42BE-B854-B8E8268840EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1133EE3-FBE3-42BE-B854-B8E8268840EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92544B40-16BC-404B-850E-3733531998A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92544B40-16BC-404B-850E-3733531998A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92544B40-16BC-404B-850E-3733531998A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92544B40-16BC-404B-850E-3733531998A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

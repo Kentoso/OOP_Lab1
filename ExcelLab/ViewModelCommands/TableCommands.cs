@@ -13,10 +13,18 @@ public static class TableCommands
     {
         var p = parameter as RoutedEventArgs;
         var dg = p.Source as DataGrid;
+        var headers = GenerateColumnHeaders(table);
+        SetDataGridColumns(dg, headers);
+    }
+
+    private static List<string> GenerateColumnHeaders(TableData table)
+    {
+        List<string> result = new List<string>();
         for (int i = 0; i < table.Size.columns; i++)
         {
             string header = "";
-            if (i > 25)
+            if (i < 26) header = ((char) ('A' + i)).ToString();
+            else
             {
                 int t = i + 1;
                 List<int> iIn26System = new List<int>();
@@ -25,9 +33,8 @@ public static class TableCommands
                     iIn26System.Add(t % 26);
                     t /= 26;
                 }
-
-                bool isShort = iIn26System.Count == 1;
-                iIn26System = iIn26System.Select((x, k) => k == 0 && !isShort ? x - 1 : x - 1).ToList();
+                
+                for (int j = 0; j < iIn26System.Count; j++) iIn26System[j]--;
                 iIn26System.Reverse();
 
                 for (int j = 0; j < iIn26System.Count; j++)
@@ -35,19 +42,22 @@ public static class TableCommands
                     header += (char) ('A' + iIn26System[j]);
                 }
             }
-            else
-            {
-                header = ((char) ('A' + i)).ToString();
-            }
-            
+            result.Add(header);
+        }
+        return result;
+    }
+
+    private static void SetDataGridColumns(DataGrid dg, List<string> headers)
+    {
+        for (int i = 0; i < headers.Count; i++)
+        {
             var column = new DataGridTextColumn
             {
-                Header = header,
+                Header = headers[i],
                 Width = 50,
-                Binding = new Binding($"Cells[{i}].Content")
+                Binding = new Binding($"Cells[{i}].ViewContent")
                     {UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged}
             };
-
             dg.Columns.Add(column);
         }
     }

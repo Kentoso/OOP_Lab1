@@ -1,0 +1,6 @@
+Number=1
+Identifier=2
+Equals=3
+Whitespace=4
+Newline=5
+'='=3
