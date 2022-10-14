@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using ExcelLab.Table;
 using PropertyChanged;
 
 namespace ExcelLab;
@@ -8,8 +9,7 @@ public class Cell
 {
     public int Row { get; set; }
     public int Column { get; set; }
-    public bool Error { get; set; }
-    // public bool IsSelected { get; set; }
+    public ErrorStates Error { get; set; }
     public bool IsEdited { get; set; }
 
     public List<Cell> Dependencies;
@@ -20,7 +20,21 @@ public class Cell
 
     public string ViewContent
     {
-        get => IsEdited ? Content : ParsedContent;
+        get {
+            switch (Error)
+            {
+                case ErrorStates.None:
+                    return IsEdited ? Content : ParsedContent;
+                case ErrorStates.Recursion:
+                    return "#RECURSION_ERROR#";
+                case ErrorStates.Address:
+                    return "#ADDRESS_ERRROR#";
+                case ErrorStates.Syntax:
+                    return "#SYNTAX_ERROR#";
+                default:
+                    return "#UNKNOWN_ERROR#";
+            }
+        } 
         set => Content = value;
     }
 
@@ -29,7 +43,7 @@ public class Cell
         Row = row;
         Column = col;
         ViewContent = content;
-        Error = false;
+        Error = ErrorStates.None;
         Dependencies = new List<Cell>();
         Dependents = new List<Cell>();
     }

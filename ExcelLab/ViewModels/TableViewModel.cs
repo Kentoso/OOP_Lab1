@@ -41,11 +41,6 @@ public class TableViewModel : BaseViewModel
             var row = p.AddedCells[0].Item as Row;
             CurrentCell = row?.Cells[p.AddedCells[0].Column.DisplayIndex] ?? new Cell(0, 0, "error");
         });
-        RowNumerationUpdateCommand = new ParameterizedCommand((parameter) =>
-        {
-            var p = parameter as DataGridRowEventArgs;
-            p.Row.Header = p.Row.GetIndex();
-        });
         DataGridLoadedCommand = new ParameterizedCommand((parameter) =>
         {
             TableCommands.DataGridLoaded(parameter, Table);
@@ -67,14 +62,4 @@ public class TableViewModel : BaseViewModel
             CurrentCell.IsEdited = false;
         });
     }
-
-    private string GetCellContent((int x, int y) coord)
-    {
-        // return TableRows[coord.x].Cells[coord.y].Content;
-        return "";
-    }
-    
-    
-
-
 }
