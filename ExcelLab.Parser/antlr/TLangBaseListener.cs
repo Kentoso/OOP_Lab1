@@ -76,6 +76,34 @@ public partial class TLangBaseListener : ITLangListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitNumber([NotNull] TLangParser.NumberContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by the <c>avg</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAvg([NotNull] TLangParser.AvgContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>avg</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAvg([NotNull] TLangParser.AvgContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>cmp</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterCmp([NotNull] TLangParser.CmpContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>cmp</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitCmp([NotNull] TLangParser.CmpContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by the <c>factorial</c>
 	/// labeled alternative in <see cref="TLangParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -90,6 +118,20 @@ public partial class TLangBaseListener : ITLangListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitFactorial([NotNull] TLangParser.FactorialContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by the <c>minmax</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterMinmax([NotNull] TLangParser.MinmaxContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>minmax</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitMinmax([NotNull] TLangParser.MinmaxContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by the <c>addsub</c>
 	/// labeled alternative in <see cref="TLangParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -103,6 +145,20 @@ public partial class TLangBaseListener : ITLangListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitAddsub([NotNull] TLangParser.AddsubContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>if</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterIf([NotNull] TLangParser.IfContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>if</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitIf([NotNull] TLangParser.IfContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>decinc</c>
 	/// labeled alternative in <see cref="TLangParser.expression"/>.

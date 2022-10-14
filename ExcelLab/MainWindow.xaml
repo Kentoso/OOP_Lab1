@@ -7,7 +7,7 @@
         xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
         xmlns:Views="clr-namespace:ExcelLab.Views"
         mc:Ignorable="d"
-        Title="ExcelLab" Height="400" Width="800" MinHeight="400" MinWidth="540">
+        Title="ExcelLab" Height="400" Width="800" MinHeight="400" MinWidth="600">
     <Window.DataContext>
         <local:TableViewModel />
     </Window.DataContext>
@@ -30,19 +30,12 @@
                 </Border.Background>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
                             <ColumnDefinition Width="3*" />
                         </Grid.ColumnDefinitions>
+                        <Label Content="{Binding LatestSyntaxError}" FontWeight="Bold" FontSize="18"/>
                         <TextBox Height="24" FontSize="14" VerticalAlignment="Center" Grid.Column="1"
-                                 Text="{Binding CurrentCell.ViewContent, UpdateSourceTrigger=PropertyChanged}">
-                            <TextBox.Style>
-                                <Style TargetType="TextBox">
-                                    <Style.Triggers>
-                                        <!-- Add locking text box when CurrentCell is null | maybe with converters? -->
-                                        <Trigger></Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBox.Style>
+                                 Text="{Binding CurrentCell.Content, UpdateSourceTrigger=PropertyChanged}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="LostFocus">
                                     <i:InvokeCommandAction PassEventArgsToCommand="True"
@@ -105,7 +98,6 @@
                                                    Command="{Binding CellEditEndedCommand}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                    
                 </DataGrid>
             </ScrollViewer>
         </DockPanel>

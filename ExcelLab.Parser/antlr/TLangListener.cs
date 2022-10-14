@@ -65,6 +65,30 @@ public interface ITLangListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitNumber([NotNull] TLangParser.NumberContext context);
 	/// <summary>
+	/// Enter a parse tree produced by the <c>avg</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterAvg([NotNull] TLangParser.AvgContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>avg</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitAvg([NotNull] TLangParser.AvgContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>cmp</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterCmp([NotNull] TLangParser.CmpContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>cmp</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitCmp([NotNull] TLangParser.CmpContext context);
+	/// <summary>
 	/// Enter a parse tree produced by the <c>factorial</c>
 	/// labeled alternative in <see cref="TLangParser.expression"/>.
 	/// </summary>
@@ -77,6 +101,18 @@ public interface ITLangListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitFactorial([NotNull] TLangParser.FactorialContext context);
 	/// <summary>
+	/// Enter a parse tree produced by the <c>minmax</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterMinmax([NotNull] TLangParser.MinmaxContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>minmax</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitMinmax([NotNull] TLangParser.MinmaxContext context);
+	/// <summary>
 	/// Enter a parse tree produced by the <c>addsub</c>
 	/// labeled alternative in <see cref="TLangParser.expression"/>.
 	/// </summary>
@@ -88,6 +124,18 @@ public interface ITLangListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitAddsub([NotNull] TLangParser.AddsubContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>if</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterIf([NotNull] TLangParser.IfContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>if</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitIf([NotNull] TLangParser.IfContext context);
 	/// <summary>
 	/// Enter a parse tree produced by the <c>decinc</c>
 	/// labeled alternative in <see cref="TLangParser.expression"/>.

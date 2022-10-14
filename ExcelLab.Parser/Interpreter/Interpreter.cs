@@ -35,6 +35,8 @@ public class Interpreter
         Lexer.SetInputStream(stream);
         TokenStream.SetTokenSource(Lexer);
         Parser = new TLangParser(TokenStream) {BuildParseTree = true};
+        Parser.RemoveErrorListeners();
+        Parser.AddErrorListener(TLangErrorHandler.Instance);
         TLangVisitor visitor = new TLangVisitor();
         var b = Parser.content();
         var result = visitor.Visit(b);

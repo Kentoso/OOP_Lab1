@@ -3,7 +3,11 @@
 
 content: expression EOF;
 
-expression : (op = (PLUSPLUS | MINUSMINUS)) expression #decinc
+expression : (op = (MAX | MIN)) '(' exps+=expression (',' exps+= expression)*')' #minmax
+| AVG '(' exps+=expression (',' exps+= expression)*')' #avg
+| IF '(' condition=expression ',' ifbranch=expression ',' elsebranch=expression ')' #if
+| CMP '(' expression ',' expression ')' #cmp
+| (op = (PLUSPLUS | MINUSMINUS)) expression #decinc
 | expression '!' #factorial
 | expression '^' expression #exponent
 | expression (op = (ASTERISK | SLASH)) expression #muldiv
@@ -11,6 +15,11 @@ expression : (op = (PLUSPLUS | MINUSMINUS)) expression #decinc
 | '('expression')' #parentheses
 | (PLUS | MINUS)? FLOAT #number;
 
+AVG : 'AVG';
+MAX : 'MAX';
+MIN : 'MIN';
+IF : 'IF';
+CMP : 'CMP';
 FLOAT : DIGITS+('.'DIGITS+)? ;
 PLUSPLUS: PLUS PLUS;
 MINUSMINUS: MINUS MINUS;
@@ -21,3 +30,4 @@ SLASH : '/';
 fragment DIGITS : [0-9] ;
 
 WS : [ \r\n\t] + -> skip ;
+UKNOWNCHAR : . ;

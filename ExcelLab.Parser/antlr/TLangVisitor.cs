@@ -52,6 +52,20 @@ public interface ITLangVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitNumber([NotNull] TLangParser.NumberContext context);
 	/// <summary>
+	/// Visit a parse tree produced by the <c>avg</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAvg([NotNull] TLangParser.AvgContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>cmp</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitCmp([NotNull] TLangParser.CmpContext context);
+	/// <summary>
 	/// Visit a parse tree produced by the <c>factorial</c>
 	/// labeled alternative in <see cref="TLangParser.expression"/>.
 	/// </summary>
@@ -59,12 +73,26 @@ public interface ITLangVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitFactorial([NotNull] TLangParser.FactorialContext context);
 	/// <summary>
+	/// Visit a parse tree produced by the <c>minmax</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitMinmax([NotNull] TLangParser.MinmaxContext context);
+	/// <summary>
 	/// Visit a parse tree produced by the <c>addsub</c>
 	/// labeled alternative in <see cref="TLangParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitAddsub([NotNull] TLangParser.AddsubContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>if</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIf([NotNull] TLangParser.IfContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>decinc</c>
 	/// labeled alternative in <see cref="TLangParser.expression"/>.

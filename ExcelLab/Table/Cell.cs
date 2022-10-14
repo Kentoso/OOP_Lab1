@@ -7,24 +7,27 @@ namespace ExcelLab;
 [AddINotifyPropertyChangedInterface]
 public class Cell
 {
-    public int Row { get; set; }
-    public int Column { get; set; }
+    // public int Row { get; set; }
+    // public int Column { get; set; }
+    private (int Row, int Column) _coordinates { get; }
     public ErrorStates Error { get; set; }
     public bool IsEdited { get; set; }
 
     public List<Cell> Dependencies;
     public List<Cell> Dependents;
     public string ParsedContent { get; set; }
-    
     public string Content { get; set; }
+    private string _previousContent { get; set; }
 
     public string ViewContent
     {
-        get {
+        get
+        {
+            if (IsEdited) return Content;
             switch (Error)
             {
                 case ErrorStates.None:
-                    return IsEdited ? Content : ParsedContent;
+                    return ParsedContent;
                 case ErrorStates.Recursion:
                     return "#RECURSION_ERROR#";
                 case ErrorStates.Address:
@@ -40,8 +43,7 @@ public class Cell
 
     public Cell(int row, int col, string content)
     {
-        Row = row;
-        Column = col;
+        _coordinates = (row, col);
         ViewContent = content;
         Error = ErrorStates.None;
         Dependencies = new List<Cell>();
@@ -65,5 +67,21 @@ public class Cell
             }
         }
         return false;
+    }
+
+    public void RestorePreviousContent()
+    {
+        Content = _previousContent;
+    }
+
+    public void SetPreviousContent()
+    {
+        _previousContent = Content;
+    }
+
+    public void SetSyntaxError(string message)
+    {
+        Error = ErrorStates.Syntax;
+        
     }
 }

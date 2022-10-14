@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows.Data;
+using Antlr4.Runtime.Misc;
 using ExcelLab.Parser.Interpreter;
 using ExcelLab.Table;
 
@@ -26,12 +28,14 @@ public class CellContentConverter
 
     public void Convert(Cell cell, TableData tableData)
     {
-        cell.Error = ErrorStates.None;
-        if (cell.Content == "")
+        if (cell.Content.Trim() == "")
         {
+            cell.Content = "";
             cell.ParsedContent = "";
+            cell.Error = ErrorStates.None;
             return;
         }
+        cell.Error = ErrorStates.None;
         Regex addressRegex = new Regex(@"(?<=\|)[A-Z]+[1-9][0-9]*(?=\|)", RegexOptions.IgnoreCase);
         if (!UpdateDeps(cell, tableData, addressRegex)) return;
         if (cell.IsThereADependencyCycle())
@@ -39,13 +43,15 @@ public class CellContentConverter
             FillDependencyCycleWithRecursionError(cell);
             return;
         }
-        var contentCopy = cell.Content;
-        contentCopy = ReplaceAddresses(tableData, contentCopy, addressRegex);
-        cell.ParsedContent = Interpreter.Instance.Interpret(contentCopy).ToString(CultureInfo.InvariantCulture);
-
-        foreach (var dep in cell.Dependents)
+        var contentCopy = ReplaceAddresses(tableData, cell.Content, addressRegex);
+        if (contentCopy == null) cell.Error = ErrorStates.Address;
+        if (cell.Error == ErrorStates.None)
         {
-            Convert(dep, tableData);
+            cell.ParsedContent = Interpreter.Instance.Interpret(contentCopy).ToString(CultureInfo.InvariantCulture);
+            foreach (var dep in cell.Dependents)
+            {
+                Convert(dep, tableData);
+            }
         }
     }
 
@@ -60,14 +66,11 @@ public class CellContentConverter
             var addressedCell = tableData.GetCell(a);
             if (addressedCell == null)
             {
-                cell.ParsedContent = "#ADDRESS_ERROR#";
+                cell.Error = ErrorStates.Address;
                 return false;
             }
-
             cell.Dependencies.Add(addressedCell);
             if (!addressedCell.Dependents.Contains(cell)) addressedCell.Dependents.Add(cell);
-            // var addressedCellContent = addressedCell.Content.Trim() == "" ? "0" : addressedCell.Content;
-            // contentCopy = contentCopy.Replace($"|{a}|", $"({addressedCellContent})");
         }
         foreach (var pDep in prevDependencies)
         {
@@ -76,9 +79,8 @@ public class CellContentConverter
         }
         return true;
     }
-    private string ReplaceAddresses(TableData tableData, string content, Regex addressRegex)
+    private string? ReplaceAddresses(TableData tableData, string content, Regex addressRegex)
     {
-        //TODO: iterative address replacement with content
         var contentCopy = content;
         var matches = addressRegex.Matches(contentCopy);
         while (matches.Count > 0)
@@ -87,12 +89,9 @@ public class CellContentConverter
             {
                 string a = address.Value;
                 var addressedCell = tableData.GetCell(a);
-                if (addressedCell == null)
-                {
-                    return "#ADDRESS_ERROR#";
-                }
+                if (addressedCell == null) return null; 
                 var addressedCellContent = addressedCell.Content.Trim() == "" ? "0" : addressedCell.Content;
-                contentCopy = contentCopy.Replace($"|{a}|", $"({addressedCell.Content})");
+                contentCopy = contentCopy.Replace($"|{a}|", $"({addressedCellContent})");
             }
             matches = addressRegex.Matches(contentCopy);
         }
@@ -100,7 +99,7 @@ public class CellContentConverter
     }
     private void FillDependencyCycleWithRecursionError(Cell cell)
     {
-        cell.ParsedContent = "#RECURSION_ERROR$";
+        cell.Error = ErrorStates.Recursion;
         Stack<Cell> s = new Stack<Cell>();
         List<Cell> visited = new List<Cell>();
         Cell current = cell;
@@ -112,7 +111,7 @@ public class CellContentConverter
             {
                 foreach (var dep in current.Dependents)
                 {
-                    dep.ParsedContent = "#RECURSION_ERROR$";
+                    dep.Error = ErrorStates.Recursion;
                     if (!visited.Contains(dep)) s.Push(dep);
                 }
 
@@ -120,70 +119,4 @@ public class CellContentConverter
             }
         }
     }
-    // public string Convert(Cell cell, TableData tableData)
-    // {
-    //     if (cell.ViewContent == "") return "";
-    //     var prevDependencies = new List<Cell>(cell.Dependencies);
-    //     cell.Dependencies = new List<Cell>();
-    //     var contentCopy = cell.Content;
-    //     Regex addressRegex = new Regex(@"(?<=\|)[A-Z]+[1-9]+(?=\|)");
-    //     var matches = addressRegex.Matches(contentCopy);
-    //     // while (matches.Count > 0)
-    //     // {
-    //     //     foreach (Match address in matches)
-    //     //     {
-    //     //         string a = address.Value;
-    //     //         var addressedCell = tableData.GetCell(a);
-    //     //         if (addressedCell == null) return "#ADDRESS_ERROR#";
-    //     //         if (addressedCell == cell) return "#RECURSION_ERROR#";
-    //     //         contentCopy = contentCopy.Replace($"|{a}|", addressedCell.Content);
-    //     //     }
-    //     //     matches = addressRegex.Matches(contentCopy);
-    //     // }
-    //     foreach (Match address in matches)
-    //     {
-    //         string a = address.Value;
-    //         var addressedCell = tableData.GetCell(a);
-    //         if (addressedCell == null) return "#ADDRESS_ERROR#";
-    //         cell.Dependencies.Add(addressedCell);
-    //         if (!addressedCell.Dependents.Contains(cell)) addressedCell.Dependents.Add(cell);
-    //         contentCopy = contentCopy.Replace($"|{a}|", $"({addressedCell.ViewContent})");
-    //     }
-    //
-    //     foreach (var pDep in prevDependencies)
-    //     {
-    //         if (cell.Dependencies.Contains(pDep)) continue;
-    //         pDep.Dependents.Remove(cell);
-    //     }
-    //     if (cell.IsThereADependencyCycle())
-    //     {
-    //         // foreach (var dep in cell.Dependencies)
-    //         // {
-    //         //     dep.ParsedContent = Convert(dep, tableData);
-    //         // }
-    //         return "#RECURSION_ERROR$";
-    //     }
-    //
-    //     cell.ParsedContent = Interpreter.Instance.Interpret(contentCopy).ToString(CultureInfo.InvariantCulture);
-    //
-    //     foreach (var dep in cell.Dependents)
-    //     {
-    //         dep.ParsedContent = Convert(dep, tableData);
-    //     }
-    //     
-    //     return Interpreter.Instance.Interpret(contentCopy).ToString();
-    // }
-
-   
-    // public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-    // {
-    //     string content = value as string;
-    //     if (content == "") return "";
-    //     return Interpreter.Instance.Interpret(content).ToString();
-    // }
-    //
-    // public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    // {
-    //     return value.ToString();
-    // }
 }

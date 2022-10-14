@@ -25,7 +25,7 @@ public class TableData
         }
     }
 
-    public Cell GetCell(string address)
+    public Cell? GetCell(string address)
     {   
         var firstNumberIndex = address.IndexOfAny("0123456789".ToCharArray());
         if (firstNumberIndex == -1) return null;

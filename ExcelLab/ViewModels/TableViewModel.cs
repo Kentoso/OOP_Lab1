@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using Antlr4.Runtime.Misc;
 using ExcelLab.Table;
 
 namespace ExcelLab;
@@ -17,7 +18,7 @@ public class TableViewModel : BaseViewModel
     public ICommand SelectCellCommand { get; set; }
     public ICommand RowNumerationUpdateCommand { get; set; }
     public ICommand DataGridLoadedCommand { get; set; }
-    
+    public string LatestSyntaxError { get; set; }
     public ICommand CellEditEndedCommand { get; set;  }
     public ICommand CellEditBeganCommand { get; set;  }
     // public ObservableCollection<Row> TableRows { get; set; }
@@ -49,11 +50,21 @@ public class TableViewModel : BaseViewModel
         {
             if (CurrentCell == null) return;
             CurrentCell.IsEdited = true;
+            // CurrentCell.SetPreviousContent();
         });
         CellEditEndedCommand = new ParameterizedCommand(parameter =>
         {
             if (CurrentCell == null) return;
-            CellContentConverter.Instance.Convert(CurrentCell, Table);
+            LatestSyntaxError = "";
+            try
+            {
+                CellContentConverter.Instance.Convert(CurrentCell, Table);
+            }
+            catch (ParseCanceledException e)
+            {
+                CurrentCell.Error = ErrorStates.Syntax;
+                LatestSyntaxError = $"{e.Message}";
+            }
             // foreach (var dep in CurrentCell.Dependents)
             // {
             //     dep.ParsedContent = CellContentConverter.Instance.Convert(dep, Table);
