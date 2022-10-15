@@ -5,6 +5,7 @@ content: expression EOF;
 
 expression : (op = (MAX | MIN)) '(' exps+=expression (',' exps+= expression)*')' #minmax
 | AVG '(' exps+=expression (',' exps+= expression)*')' #avg
+| SUM '(' exps+=expression (',' exps+= expression)*')' #sum
 | IF '(' condition=expression ',' ifbranch=expression ',' elsebranch=expression ')' #if
 | CMP '(' expression ',' expression ')' #cmp
 | (op = (PLUSPLUS | MINUSMINUS)) expression #decinc
@@ -15,6 +16,7 @@ expression : (op = (MAX | MIN)) '(' exps+=expression (',' exps+= expression)*')'
 | '('expression')' #parentheses
 | (PLUS | MINUS)? FLOAT #number;
 
+SUM : 'SUM';
 AVG : 'AVG';
 MAX : 'MAX';
 MIN : 'MIN';

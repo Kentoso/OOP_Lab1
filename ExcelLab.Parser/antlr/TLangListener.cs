@@ -125,6 +125,18 @@ public interface ITLangListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitAddsub([NotNull] TLangParser.AddsubContext context);
 	/// <summary>
+	/// Enter a parse tree produced by the <c>sum</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterSum([NotNull] TLangParser.SumContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>sum</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitSum([NotNull] TLangParser.SumContext context);
+	/// <summary>
 	/// Enter a parse tree produced by the <c>if</c>
 	/// labeled alternative in <see cref="TLangParser.expression"/>.
 	/// </summary>

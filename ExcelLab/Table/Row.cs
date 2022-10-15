@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using PropertyChanged;
 
 namespace ExcelLab.Table;
@@ -7,16 +8,23 @@ namespace ExcelLab.Table;
 public class Row
 {
     private static int _rowCount = 0;
-    public List<Cell> Cells { get; set; }
+    public ObservableCollection<Cell> Cells { get; set; }
 
     public Row(int cNumber)
     {
-        Cells = new List<Cell>();
+        Cells = new ObservableCollection<Cell>();
         for (int i = 0; i < cNumber; i++)
         {
             // Cells.Add(new Cell(_rowCount, i, $"row: {_rowCount}, col: {i}"));
             Cells.Add(new Cell(_rowCount, i, ""));
         }
         _rowCount++;
+    }
+    
+    public Row() {}
+    
+    public void AddCell()
+    {
+        Cells.Add(new Cell(Cells[0].Coordinates.Row, Cells.Count, ""));
     }
 }

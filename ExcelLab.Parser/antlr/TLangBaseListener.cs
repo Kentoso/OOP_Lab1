@@ -146,6 +146,20 @@ public partial class TLangBaseListener : ITLangListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitAddsub([NotNull] TLangParser.AddsubContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by the <c>sum</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterSum([NotNull] TLangParser.SumContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>sum</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitSum([NotNull] TLangParser.SumContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by the <c>if</c>
 	/// labeled alternative in <see cref="TLangParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>

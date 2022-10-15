@@ -87,6 +87,13 @@ public interface ITLangVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitAddsub([NotNull] TLangParser.AddsubContext context);
 	/// <summary>
+	/// Visit a parse tree produced by the <c>sum</c>
+	/// labeled alternative in <see cref="TLangParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSum([NotNull] TLangParser.SumContext context);
+	/// <summary>
 	/// Visit a parse tree produced by the <c>if</c>
 	/// labeled alternative in <see cref="TLangParser.expression"/>.
 	/// </summary>

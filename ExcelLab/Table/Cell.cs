@@ -9,7 +9,7 @@ public class Cell
 {
     // public int Row { get; set; }
     // public int Column { get; set; }
-    private (int Row, int Column) _coordinates { get; }
+    public (int Row, int Column) Coordinates { get; }
     public ErrorStates Error { get; set; }
     public bool IsEdited { get; set; }
 
@@ -43,45 +43,28 @@ public class Cell
 
     public Cell(int row, int col, string content)
     {
-        _coordinates = (row, col);
+        Coordinates = (row, col);
         ViewContent = content;
         Error = ErrorStates.None;
         Dependencies = new List<Cell>();
         Dependents = new List<Cell>();
+        Content = "";
+        ParsedContent = "";
     }
+    
+    public Cell() {}
 
-    public bool IsThereADependencyCycle()
+    public bool IsThereASelfDependencyRecursive(HashSet<Cell>? path = null)
     {
-        Cell current = this;
-        List<Cell> visited = new List<Cell>();
-        Stack<Cell> s = new Stack<Cell>();
-        s.Push(this);
-        while (s.Count > 0)
+        if (path == null) path = new HashSet<Cell>();
+        if (path.Contains(this)) return true;
+        if (Dependencies.Count == 0) return false;
+        path.Add(this);
+        bool a = false;
+        foreach (var dep in Dependencies)
         {
-            current = s.Pop();
-            if (visited.Contains(current)) return true;
-            visited.Add(current);
-            foreach (var dep in current.Dependencies)
-            {
-                s.Push(dep);
-            }
+            a = a || dep.IsThereASelfDependencyRecursive(new HashSet<Cell>(path));
         }
-        return false;
-    }
-
-    public void RestorePreviousContent()
-    {
-        Content = _previousContent;
-    }
-
-    public void SetPreviousContent()
-    {
-        _previousContent = Content;
-    }
-
-    public void SetSyntaxError(string message)
-    {
-        Error = ErrorStates.Syntax;
-        
+        return a;
     }
 }

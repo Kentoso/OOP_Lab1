@@ -22,26 +22,7 @@ public static class TableCommands
         List<string> result = new List<string>();
         for (int i = 0; i < table.Size.columns; i++)
         {
-            string header = "";
-            if (i < 26) header = ((char) ('A' + i)).ToString();
-            else
-            {
-                int t = i + 1;
-                List<int> iIn26System = new List<int>();
-                while (t > 0)
-                {
-                    iIn26System.Add(t % 26);
-                    t /= 26;
-                }
-                
-                for (int j = 0; j < iIn26System.Count; j++) iIn26System[j]--;
-                iIn26System.Reverse();
-
-                for (int j = 0; j < iIn26System.Count; j++)
-                {
-                    header += (char) ('A' + iIn26System[j]);
-                }
-            }
+            string header = TableData.ConvertColumnIndexToHeader(i);
             result.Add(header);
         }
         return result;
@@ -61,4 +42,33 @@ public static class TableCommands
             dg.Columns.Add(column);
         }
     }
+
+    public static void AddOrRemoveColumn(DataGrid dg, TableData table)
+    {
+        var tableColNum = table.Size.columns;
+        var dgColNum = dg.Columns.Count;
+        if (tableColNum > dgColNum)
+        {
+            var column = new DataGridTextColumn
+            {
+                Header = TableData.ConvertColumnIndexToHeader(tableColNum - 1),
+                Width = 50,
+                Binding = new Binding($"Cells[{tableColNum - 1}].ViewContent")
+                    {UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged}
+            };
+            dg.Columns.Add(column);
+        }
+        else if (tableColNum < dgColNum)
+        {
+            dg.Columns.RemoveAt(dgColNum - 1);
+        }
+    }
+
+    public static void RegenerateColumnHeaders(DataGrid dg, TableData table)
+    {
+        var headers = GenerateColumnHeaders(table);
+        dg.Columns.Clear();
+        SetDataGridColumns(dg, headers);
+    }
+    
 }

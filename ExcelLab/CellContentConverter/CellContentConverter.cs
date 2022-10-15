@@ -37,13 +37,14 @@ public class CellContentConverter
         }
         cell.Error = ErrorStates.None;
         Regex addressRegex = new Regex(@"(?<=\|)[A-Z]+[1-9][0-9]*(?=\|)", RegexOptions.IgnoreCase);
-        if (!UpdateDeps(cell, tableData, addressRegex)) return;
-        if (cell.IsThereADependencyCycle())
+        var contentCopy = PreprocessAddressRange(cell.Content);
+        if (!UpdateDeps(cell, tableData, contentCopy, addressRegex)) return;
+        if (cell.IsThereASelfDependencyRecursive())
         {
             FillDependencyCycleWithRecursionError(cell);
             return;
         }
-        var contentCopy = ReplaceAddresses(tableData, cell.Content, addressRegex);
+        contentCopy = ReplaceAddresses(tableData, contentCopy, addressRegex);
         if (contentCopy == null) cell.Error = ErrorStates.Address;
         if (cell.Error == ErrorStates.None)
         {
@@ -55,11 +56,11 @@ public class CellContentConverter
         }
     }
 
-    private bool UpdateDeps(Cell cell, TableData tableData, Regex addressRegex)
+    private bool UpdateDeps(Cell cell, TableData tableData, string content, Regex addressRegex)
     {
         var prevDependencies = new List<Cell>(cell.Dependencies);
         cell.Dependencies = new List<Cell>();
-        var matches = addressRegex.Matches(cell.Content);
+        var matches = addressRegex.Matches(content);
         foreach (Match address in matches)
         {
             string a = address.Value;
@@ -118,5 +119,42 @@ public class CellContentConverter
                 visited.Add(current);
             }
         }
+    }
+
+    public string PreprocessAddressRange(string content)
+    {
+        Regex addressRegex = new Regex(@"(?<=\|)[A-Z]+[1-9][0-9]*:[A-Z]+[1-9][0-9]*(?=\|)", RegexOptions.IgnoreCase);
+        var matches = addressRegex.Matches(content);
+        var contentCopy = content;
+        foreach (Match match in matches)
+        {
+            var value = match.Value;
+            var colonIndex = value.IndexOf(':');
+            var startAddress = value.Substring(0, colonIndex);
+            var endAddress = value.Substring(colonIndex + 1);
+            
+            var startFirstNumIndex = startAddress.IndexOfAny("0123456789".ToCharArray());
+            var startColumnStr = startAddress.Substring(0, startFirstNumIndex).ToUpper();
+            int startRow = Int32.Parse(startAddress.Substring(startFirstNumIndex));
+            int startCol = TableData.DecodeColumnHeader(startColumnStr);
+
+            var endFirstNumIndex = endAddress.IndexOfAny("0123456789".ToCharArray());
+            var endColumnStr = endAddress.Substring(0, endFirstNumIndex).ToUpper();
+            int endRow = Int32.Parse(endAddress.Substring(endFirstNumIndex));
+            int endCol = TableData.DecodeColumnHeader(endColumnStr);
+            
+            string result = "";
+            for (int i = startRow; i <= endRow; i++)
+            {
+                for (int j = startCol; j <= endCol; j++)
+                {
+                    if ((i != startRow || j != startCol)) result += ",";
+                    result += $"|{TableData.ConvertColumnIndexToHeader(j)}{i}|";
+                }
+            }
+
+            contentCopy = contentCopy.Replace($"|{match.Value}|", result);
+        }
+        return contentCopy;
     }
 }

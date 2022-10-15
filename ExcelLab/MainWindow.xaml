@@ -21,7 +21,15 @@
             <StackPanel DockPanel.Dock="Top">
                 <Menu>
                     <MenuItem Header="_File">
-                        <MenuItem Header="New" IsCheckable="False"/>
+                        <MenuItem Header="New" IsCheckable="False" Command="{Binding NewTableCommand}"/>
+                        <MenuItem Header="Open..." IsCheckable="False" Command="{Binding OpenTableCommand}" />
+                        <MenuItem Header="Save as..." IsCheckable="False" Command="{Binding SaveTableCommand}"/>
+                    </MenuItem>
+                    <MenuItem Header="_Table">
+                        <MenuItem Header="Add Column" IsCheckable="False" Command="{Binding AddColumnCommand}"/>
+                        <MenuItem Header="Add Row" IsCheckable="False" Command="{Binding AddRowCommand}"/>
+                        <MenuItem Header="Remove Column" IsCheckable="False" Command="{Binding RemoveColumnCommand}" />
+                        <MenuItem Header="Remove Row" IsCheckable="False" Command="{Binding RemoveRowCommand}" />
                     </MenuItem>
                 </Menu>
                 <Border Padding="15">
@@ -33,24 +41,30 @@
                             <ColumnDefinition Width="2*" />
                             <ColumnDefinition Width="3*" />
                         </Grid.ColumnDefinitions>
-                        <Label Content="{Binding LatestSyntaxError}" FontWeight="Bold" FontSize="18"/>
-                        <TextBox Height="24" FontSize="14" VerticalAlignment="Center" Grid.Column="1"
-                                 Text="{Binding CurrentCell.Content, UpdateSourceTrigger=PropertyChanged}">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="LostFocus">
-                                    <i:InvokeCommandAction PassEventArgsToCommand="True"
-                                                           Command="{Binding CellEditEndedCommand}" />
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="GotFocus">
-                                    <i:InvokeCommandAction PassEventArgsToCommand="True"
-                                                           Command="{Binding CellEditBeganCommand}" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </TextBox>
+                    <Label Content="{Binding LatestSyntaxError}" FontWeight="Bold" FontSize="18"/>
+                    <TextBox Height="24" FontSize="14" VerticalAlignment="Center" Grid.Column="1"
+                             Text="{Binding CurrentCell.Content, UpdateSourceTrigger=PropertyChanged}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="LostFocus">
+                                <i:InvokeCommandAction PassEventArgsToCommand="True"
+                                                       Command="{Binding CellEditEndedCommand}" />
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="GotFocus">
+                                <i:InvokeCommandAction PassEventArgsToCommand="True"
+                                                       Command="{Binding CellEditBeganCommand}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </TextBox>
                     </Grid>
                 </Border>
             </StackPanel>
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseWheel">
+                        <i:InvokeCommandAction PassEventArgsToCommand="True"
+                                               Command="{Binding ScrollCommand}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <DataGrid RowHeaderWidth="25" LoadingRow="TableDataGrid_OnLoadingRow" RowHeight="30" SelectionMode="Single" SelectionUnit="Cell" CanUserAddRows="False" CanUserSortColumns="False"  CanUserReorderColumns="False" AutoGenerateColumns="False" ItemsSource="{Binding Table.Rows}">
                     <DataGrid.CellStyle>
                         <Style TargetType="DataGridCell">

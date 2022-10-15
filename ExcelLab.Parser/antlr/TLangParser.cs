@@ -36,9 +36,9 @@ public partial class TLangParser : Parser {
 	protected static DFA[] decisionToDFA;
 	protected static PredictionContextCache sharedContextCache = new PredictionContextCache();
 	public const int
-		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, AVG=6, MAX=7, MIN=8, IF=9, CMP=10, 
-		FLOAT=11, PLUSPLUS=12, MINUSMINUS=13, PLUS=14, MINUS=15, ASTERISK=16, 
-		SLASH=17, WS=18, UKNOWNCHAR=19;
+		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, SUM=6, AVG=7, MAX=8, MIN=9, IF=10, 
+		CMP=11, FLOAT=12, PLUSPLUS=13, MINUSMINUS=14, PLUS=15, MINUS=16, ASTERISK=17, 
+		SLASH=18, WS=19, UKNOWNCHAR=20;
 	public const int
 		RULE_content = 0, RULE_expression = 1;
 	public static readonly string[] ruleNames = {
@@ -46,13 +46,13 @@ public partial class TLangParser : Parser {
 	};
 
 	private static readonly string[] _LiteralNames = {
-		null, "'('", "','", "')'", "'!'", "'^'", "'AVG'", "'MAX'", "'MIN'", "'IF'", 
-		"'CMP'", null, null, null, "'+'", "'-'", "'*'", "'/'"
+		null, "'('", "','", "')'", "'!'", "'^'", "'SUM'", "'AVG'", "'MAX'", "'MIN'", 
+		"'IF'", "'CMP'", null, null, null, "'+'", "'-'", "'*'", "'/'"
 	};
 	private static readonly string[] _SymbolicNames = {
-		null, null, null, null, null, null, "AVG", "MAX", "MIN", "IF", "CMP", 
-		"FLOAT", "PLUSPLUS", "MINUSMINUS", "PLUS", "MINUS", "ASTERISK", "SLASH", 
-		"WS", "UKNOWNCHAR"
+		null, null, null, null, null, null, "SUM", "AVG", "MAX", "MIN", "IF", 
+		"CMP", "FLOAT", "PLUSPLUS", "MINUSMINUS", "PLUS", "MINUS", "ASTERISK", 
+		"SLASH", "WS", "UKNOWNCHAR"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);
 
@@ -328,6 +328,34 @@ public partial class TLangParser : Parser {
 			else return visitor.VisitChildren(this);
 		}
 	}
+	public partial class SumContext : ExpressionContext {
+		public ExpressionContext _expression;
+		public IList<ExpressionContext> _exps = new List<ExpressionContext>();
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SUM() { return GetToken(TLangParser.SUM, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ExpressionContext[] expression() {
+			return GetRuleContexts<ExpressionContext>();
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public ExpressionContext expression(int i) {
+			return GetRuleContext<ExpressionContext>(i);
+		}
+		public SumContext(ExpressionContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			ITLangListener typedListener = listener as ITLangListener;
+			if (typedListener != null) typedListener.EnterSum(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			ITLangListener typedListener = listener as ITLangListener;
+			if (typedListener != null) typedListener.ExitSum(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ITLangVisitor<TResult> typedVisitor = visitor as ITLangVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSum(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
 	public partial class IfContext : ExpressionContext {
 		public ExpressionContext condition;
 		public ExpressionContext ifbranch;
@@ -453,7 +481,7 @@ public partial class TLangParser : Parser {
 			int _alt;
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 58;
+			State = 70;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case MAX:
@@ -534,26 +562,59 @@ public partial class TLangParser : Parser {
 				Match(T__2);
 				}
 				break;
+			case SUM:
+				{
+				_localctx = new SumContext(_localctx);
+				Context = _localctx;
+				_prevctx = _localctx;
+				State = 32;
+				Match(SUM);
+				State = 33;
+				Match(T__0);
+				State = 34;
+				((SumContext)_localctx)._expression = expression(0);
+				((SumContext)_localctx)._exps.Add(((SumContext)_localctx)._expression);
+				State = 39;
+				ErrorHandler.Sync(this);
+				_la = TokenStream.LA(1);
+				while (_la==T__1) {
+					{
+					{
+					State = 35;
+					Match(T__1);
+					State = 36;
+					((SumContext)_localctx)._expression = expression(0);
+					((SumContext)_localctx)._exps.Add(((SumContext)_localctx)._expression);
+					}
+					}
+					State = 41;
+					ErrorHandler.Sync(this);
+					_la = TokenStream.LA(1);
+				}
+				State = 42;
+				Match(T__2);
+				}
+				break;
 			case IF:
 				{
 				_localctx = new IfContext(_localctx);
 				Context = _localctx;
 				_prevctx = _localctx;
-				State = 32;
+				State = 44;
 				Match(IF);
-				State = 33;
+				State = 45;
 				Match(T__0);
-				State = 34;
+				State = 46;
 				((IfContext)_localctx).condition = expression(0);
-				State = 35;
+				State = 47;
 				Match(T__1);
-				State = 36;
+				State = 48;
 				((IfContext)_localctx).ifbranch = expression(0);
-				State = 37;
+				State = 49;
 				Match(T__1);
-				State = 38;
+				State = 50;
 				((IfContext)_localctx).elsebranch = expression(0);
-				State = 39;
+				State = 51;
 				Match(T__2);
 				}
 				break;
@@ -562,17 +623,17 @@ public partial class TLangParser : Parser {
 				_localctx = new CmpContext(_localctx);
 				Context = _localctx;
 				_prevctx = _localctx;
-				State = 41;
+				State = 53;
 				Match(CMP);
-				State = 42;
+				State = 54;
 				Match(T__0);
-				State = 43;
+				State = 55;
 				expression(0);
-				State = 44;
+				State = 56;
 				Match(T__1);
-				State = 45;
+				State = 57;
 				expression(0);
-				State = 46;
+				State = 58;
 				Match(T__2);
 				}
 				break;
@@ -583,7 +644,7 @@ public partial class TLangParser : Parser {
 				Context = _localctx;
 				_prevctx = _localctx;
 				{
-				State = 48;
+				State = 60;
 				((DecincContext)_localctx).op = TokenStream.LT(1);
 				_la = TokenStream.LA(1);
 				if ( !(_la==PLUSPLUS || _la==MINUSMINUS) ) {
@@ -594,7 +655,7 @@ public partial class TLangParser : Parser {
 				    Consume();
 				}
 				}
-				State = 49;
+				State = 61;
 				expression(7);
 				}
 				break;
@@ -603,11 +664,11 @@ public partial class TLangParser : Parser {
 				_localctx = new ParenthesesContext(_localctx);
 				Context = _localctx;
 				_prevctx = _localctx;
-				State = 50;
+				State = 62;
 				Match(T__0);
-				State = 51;
+				State = 63;
 				expression(0);
-				State = 52;
+				State = 64;
 				Match(T__2);
 				}
 				break;
@@ -618,12 +679,12 @@ public partial class TLangParser : Parser {
 				_localctx = new NumberContext(_localctx);
 				Context = _localctx;
 				_prevctx = _localctx;
-				State = 55;
+				State = 67;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 				if (_la==PLUS || _la==MINUS) {
 					{
-					State = 54;
+					State = 66;
 					_la = TokenStream.LA(1);
 					if ( !(_la==PLUS || _la==MINUS) ) {
 					ErrorHandler.RecoverInline(this);
@@ -635,7 +696,7 @@ public partial class TLangParser : Parser {
 					}
 				}
 
-				State = 57;
+				State = 69;
 				Match(FLOAT);
 				}
 				break;
@@ -643,27 +704,27 @@ public partial class TLangParser : Parser {
 				throw new NoViableAltException(this);
 			}
 			Context.Stop = TokenStream.LT(-1);
-			State = 73;
+			State = 85;
 			ErrorHandler.Sync(this);
-			_alt = Interpreter.AdaptivePredict(TokenStream,5,Context);
+			_alt = Interpreter.AdaptivePredict(TokenStream,6,Context);
 			while ( _alt!=2 && _alt!=global::Antlr4.Runtime.Atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( ParseListeners!=null )
 						TriggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					State = 71;
+					State = 83;
 					ErrorHandler.Sync(this);
-					switch ( Interpreter.AdaptivePredict(TokenStream,4,Context) ) {
+					switch ( Interpreter.AdaptivePredict(TokenStream,5,Context) ) {
 					case 1:
 						{
 						_localctx = new ExponentContext(new ExpressionContext(_parentctx, _parentState));
 						PushNewRecursionContext(_localctx, _startState, RULE_expression);
-						State = 60;
+						State = 72;
 						if (!(Precpred(Context, 5))) throw new FailedPredicateException(this, "Precpred(Context, 5)");
-						State = 61;
+						State = 73;
 						Match(T__4);
-						State = 62;
+						State = 74;
 						expression(6);
 						}
 						break;
@@ -671,10 +732,10 @@ public partial class TLangParser : Parser {
 						{
 						_localctx = new MuldivContext(new ExpressionContext(_parentctx, _parentState));
 						PushNewRecursionContext(_localctx, _startState, RULE_expression);
-						State = 63;
+						State = 75;
 						if (!(Precpred(Context, 4))) throw new FailedPredicateException(this, "Precpred(Context, 4)");
 						{
-						State = 64;
+						State = 76;
 						((MuldivContext)_localctx).op = TokenStream.LT(1);
 						_la = TokenStream.LA(1);
 						if ( !(_la==ASTERISK || _la==SLASH) ) {
@@ -685,7 +746,7 @@ public partial class TLangParser : Parser {
 						    Consume();
 						}
 						}
-						State = 65;
+						State = 77;
 						expression(5);
 						}
 						break;
@@ -693,10 +754,10 @@ public partial class TLangParser : Parser {
 						{
 						_localctx = new AddsubContext(new ExpressionContext(_parentctx, _parentState));
 						PushNewRecursionContext(_localctx, _startState, RULE_expression);
-						State = 66;
+						State = 78;
 						if (!(Precpred(Context, 3))) throw new FailedPredicateException(this, "Precpred(Context, 3)");
 						{
-						State = 67;
+						State = 79;
 						((AddsubContext)_localctx).op = TokenStream.LT(1);
 						_la = TokenStream.LA(1);
 						if ( !(_la==PLUS || _la==MINUS) ) {
@@ -707,7 +768,7 @@ public partial class TLangParser : Parser {
 						    Consume();
 						}
 						}
-						State = 68;
+						State = 80;
 						expression(4);
 						}
 						break;
@@ -715,18 +776,18 @@ public partial class TLangParser : Parser {
 						{
 						_localctx = new FactorialContext(new ExpressionContext(_parentctx, _parentState));
 						PushNewRecursionContext(_localctx, _startState, RULE_expression);
-						State = 69;
+						State = 81;
 						if (!(Precpred(Context, 6))) throw new FailedPredicateException(this, "Precpred(Context, 6)");
-						State = 70;
+						State = 82;
 						Match(T__3);
 						}
 						break;
 					}
 					} 
 				}
-				State = 75;
+				State = 87;
 				ErrorHandler.Sync(this);
-				_alt = Interpreter.AdaptivePredict(TokenStream,5,Context);
+				_alt = Interpreter.AdaptivePredict(TokenStream,6,Context);
 			}
 			}
 		}
@@ -758,30 +819,33 @@ public partial class TLangParser : Parser {
 	}
 
 	private static int[] _serializedATN = {
-		4,1,19,77,2,0,7,0,2,1,7,1,1,0,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,5,1,14,8,
+		4,1,20,89,2,0,7,0,2,1,7,1,1,0,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,5,1,14,8,
 		1,10,1,12,1,17,9,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,1,26,8,1,10,1,12,1,29,
-		9,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,56,8,1,1,1,3,1,59,8,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,1,72,8,1,10,1,12,1,75,9,1,1,1,0,1,
-		2,2,0,2,0,4,1,0,7,8,1,0,12,13,1,0,14,15,1,0,16,17,87,0,4,1,0,0,0,2,58,
-		1,0,0,0,4,5,3,2,1,0,5,6,5,0,0,1,6,1,1,0,0,0,7,8,6,1,-1,0,8,9,7,0,0,0,9,
-		10,5,1,0,0,10,15,3,2,1,0,11,12,5,2,0,0,12,14,3,2,1,0,13,11,1,0,0,0,14,
-		17,1,0,0,0,15,13,1,0,0,0,15,16,1,0,0,0,16,18,1,0,0,0,17,15,1,0,0,0,18,
-		19,5,3,0,0,19,59,1,0,0,0,20,21,5,6,0,0,21,22,5,1,0,0,22,27,3,2,1,0,23,
-		24,5,2,0,0,24,26,3,2,1,0,25,23,1,0,0,0,26,29,1,0,0,0,27,25,1,0,0,0,27,
-		28,1,0,0,0,28,30,1,0,0,0,29,27,1,0,0,0,30,31,5,3,0,0,31,59,1,0,0,0,32,
-		33,5,9,0,0,33,34,5,1,0,0,34,35,3,2,1,0,35,36,5,2,0,0,36,37,3,2,1,0,37,
-		38,5,2,0,0,38,39,3,2,1,0,39,40,5,3,0,0,40,59,1,0,0,0,41,42,5,10,0,0,42,
-		43,5,1,0,0,43,44,3,2,1,0,44,45,5,2,0,0,45,46,3,2,1,0,46,47,5,3,0,0,47,
-		59,1,0,0,0,48,49,7,1,0,0,49,59,3,2,1,7,50,51,5,1,0,0,51,52,3,2,1,0,52,
-		53,5,3,0,0,53,59,1,0,0,0,54,56,7,2,0,0,55,54,1,0,0,0,55,56,1,0,0,0,56,
-		57,1,0,0,0,57,59,5,11,0,0,58,7,1,0,0,0,58,20,1,0,0,0,58,32,1,0,0,0,58,
-		41,1,0,0,0,58,48,1,0,0,0,58,50,1,0,0,0,58,55,1,0,0,0,59,73,1,0,0,0,60,
-		61,10,5,0,0,61,62,5,5,0,0,62,72,3,2,1,6,63,64,10,4,0,0,64,65,7,3,0,0,65,
-		72,3,2,1,5,66,67,10,3,0,0,67,68,7,2,0,0,68,72,3,2,1,4,69,70,10,6,0,0,70,
-		72,5,4,0,0,71,60,1,0,0,0,71,63,1,0,0,0,71,66,1,0,0,0,71,69,1,0,0,0,72,
-		75,1,0,0,0,73,71,1,0,0,0,73,74,1,0,0,0,74,3,1,0,0,0,75,73,1,0,0,0,6,15,
-		27,55,58,71,73
+		9,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,1,38,8,1,10,1,12,1,41,9,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,3,1,68,8,1,1,1,3,1,71,8,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,5,1,84,8,1,10,1,12,1,87,9,1,1,1,0,1,2,2,0,2,0,4,1,
+		0,8,9,1,0,13,14,1,0,15,16,1,0,17,18,101,0,4,1,0,0,0,2,70,1,0,0,0,4,5,3,
+		2,1,0,5,6,5,0,0,1,6,1,1,0,0,0,7,8,6,1,-1,0,8,9,7,0,0,0,9,10,5,1,0,0,10,
+		15,3,2,1,0,11,12,5,2,0,0,12,14,3,2,1,0,13,11,1,0,0,0,14,17,1,0,0,0,15,
+		13,1,0,0,0,15,16,1,0,0,0,16,18,1,0,0,0,17,15,1,0,0,0,18,19,5,3,0,0,19,
+		71,1,0,0,0,20,21,5,7,0,0,21,22,5,1,0,0,22,27,3,2,1,0,23,24,5,2,0,0,24,
+		26,3,2,1,0,25,23,1,0,0,0,26,29,1,0,0,0,27,25,1,0,0,0,27,28,1,0,0,0,28,
+		30,1,0,0,0,29,27,1,0,0,0,30,31,5,3,0,0,31,71,1,0,0,0,32,33,5,6,0,0,33,
+		34,5,1,0,0,34,39,3,2,1,0,35,36,5,2,0,0,36,38,3,2,1,0,37,35,1,0,0,0,38,
+		41,1,0,0,0,39,37,1,0,0,0,39,40,1,0,0,0,40,42,1,0,0,0,41,39,1,0,0,0,42,
+		43,5,3,0,0,43,71,1,0,0,0,44,45,5,10,0,0,45,46,5,1,0,0,46,47,3,2,1,0,47,
+		48,5,2,0,0,48,49,3,2,1,0,49,50,5,2,0,0,50,51,3,2,1,0,51,52,5,3,0,0,52,
+		71,1,0,0,0,53,54,5,11,0,0,54,55,5,1,0,0,55,56,3,2,1,0,56,57,5,2,0,0,57,
+		58,3,2,1,0,58,59,5,3,0,0,59,71,1,0,0,0,60,61,7,1,0,0,61,71,3,2,1,7,62,
+		63,5,1,0,0,63,64,3,2,1,0,64,65,5,3,0,0,65,71,1,0,0,0,66,68,7,2,0,0,67,
+		66,1,0,0,0,67,68,1,0,0,0,68,69,1,0,0,0,69,71,5,12,0,0,70,7,1,0,0,0,70,
+		20,1,0,0,0,70,32,1,0,0,0,70,44,1,0,0,0,70,53,1,0,0,0,70,60,1,0,0,0,70,
+		62,1,0,0,0,70,67,1,0,0,0,71,85,1,0,0,0,72,73,10,5,0,0,73,74,5,5,0,0,74,
+		84,3,2,1,6,75,76,10,4,0,0,76,77,7,3,0,0,77,84,3,2,1,5,78,79,10,3,0,0,79,
+		80,7,2,0,0,80,84,3,2,1,4,81,82,10,6,0,0,82,84,5,4,0,0,83,72,1,0,0,0,83,
+		75,1,0,0,0,83,78,1,0,0,0,83,81,1,0,0,0,84,87,1,0,0,0,85,83,1,0,0,0,85,
+		86,1,0,0,0,86,3,1,0,0,0,87,85,1,0,0,0,7,15,27,39,67,70,83,85
 	};
 
 	public static readonly ATN _ATN =

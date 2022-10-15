@@ -67,6 +67,16 @@ public class TLangVisitor : TLangBaseVisitor<double>
         else return -1;
     }
 
+    public override double VisitSum(TLangParser.SumContext context)
+    {
+        var expressions = context._exps;
+        if (expressions.Count == 0) return 0;
+        List<double> results = expressions.Select(e => Visit(e)).ToList();
+        double result = 0;
+        foreach (var r in results) result += r;
+        return result;
+    }
+
     public override double VisitFactorial(TLangParser.FactorialContext context)
     {
         double num = Visit(context.expression());
