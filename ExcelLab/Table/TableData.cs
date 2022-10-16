@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
-using ExcelLab.Annotations;
+using ExcelLab.Table.Serialization;
 using PropertyChanged;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
 
 namespace ExcelLab.Table;
 
@@ -128,25 +122,10 @@ public class TableData
         return true;
     }
 
-    public async void SerializeToYaml(string path)
-    {
-        var serializer = new SerializerBuilder().WithNamingConvention(PascalCaseNamingConvention.Instance).Build();
-        var yaml = serializer.Serialize(this);
-        await File.WriteAllTextAsync(path, yaml);
-    }
-
-    public static async Task<TableData> DeserializeFromYaml(string path)
-    {
-        var deserializer = new DeserializerBuilder().WithNamingConvention(PascalCaseNamingConvention.Instance).Build();
-        var yaml = await File.ReadAllTextAsync(path);
-        var tableData = deserializer.Deserialize<TableData>(yaml);
-        return tableData;
-    }
-
     public async void SerializeToJson(string path)
     {
         var options = new JsonSerializerOptions() {IncludeFields = true};
-        var json = JsonSerializer.Serialize(this, options);
+        var json = JsonSerializer.Serialize(TableDataSerialized.Serialize(this), options);
         await File.WriteAllTextAsync(path, json);
     }
 
@@ -154,7 +133,8 @@ public class TableData
     {
         var json = await File.ReadAllTextAsync(path);
         var options = new JsonSerializerOptions() {IncludeFields = true};
-        var tableData = JsonSerializer.Deserialize<TableData>(json, options);
+        var serializedTableData = JsonSerializer.Deserialize<TableDataSerialized>(json, options);
+        var tableData = serializedTableData.Deserialize();
         return tableData;
     }
 }

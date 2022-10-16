@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -37,6 +38,30 @@ public class TableViewModel : BaseViewModel
         SetParametrizedCommands();
     }
 
+    public TableViewModel(TableData tableData)
+    {
+        LatestSyntaxError = "";
+        _dg = new DataGrid();
+        CurrentCell = new Cell(-1, -1, "");
+        Table = tableData;
+        foreach (var row in Table.Rows)
+        {
+            foreach (var cell in row.Cells)
+            {
+                try
+                {
+                    CellContentConverter.Instance.Convert(cell, Table);
+                }
+                catch (ParseCanceledException e)
+                {
+                    cell.Error = ErrorStates.Syntax;
+                    LatestSyntaxError = $"{e.Message}";
+                }
+            }
+        }
+        SetRelayCommands();
+        SetParametrizedCommands();
+    }
     private void SetRelayCommands()
     {
         AddRowCommand = new RelayCommand(() => { Table.AddRow(); });
@@ -67,10 +92,26 @@ public class TableViewModel : BaseViewModel
             dialog.Filter = "All Files | *.*";
             if (dialog.ShowDialog() == DialogResult.OK && dialog.CheckPathExists)
             {
+                if (!File.Exists(dialog.FileName)) return;
                 CurrentCell = null;
                 Table = null;
                 LatestSyntaxError = "";
                 Table = await TableData.DeserializeFromJson(dialog.FileName);
+                foreach (var row in Table.Rows)
+                {
+                    foreach (var cell in row.Cells)
+                    {
+                        try
+                        {
+                            CellContentConverter.Instance.Convert(cell, Table);
+                        }
+                        catch (ParseCanceledException e)
+                        {
+                            cell.Error = ErrorStates.Syntax;
+                            LatestSyntaxError = $"{e.Message}";
+                        }
+                    }
+                }
                 TableCommands.RegenerateColumnHeaders(_dg, Table);
             }
         });

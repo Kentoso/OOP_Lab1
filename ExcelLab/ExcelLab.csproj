@@ -17,4 +17,8 @@
     <ItemGroup>
       <ProjectReference Include="..\ExcelLab.Parser\ExcelLab.Parser.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Icons\return.png" />
+    </ItemGroup>
 </Project>

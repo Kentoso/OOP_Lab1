@@ -7,7 +7,7 @@ namespace ExcelLab.Table;
 [AddINotifyPropertyChangedInterface]
 public class Row
 {
-    private static int _rowCount = 0;
+    public static int RowCount = 0;
     public ObservableCollection<Cell> Cells { get; set; }
 
     public Row(int cNumber)
@@ -16,13 +16,13 @@ public class Row
         for (int i = 0; i < cNumber; i++)
         {
             // Cells.Add(new Cell(_rowCount, i, $"row: {_rowCount}, col: {i}"));
-            Cells.Add(new Cell(_rowCount, i, ""));
+            Cells.Add(new Cell(RowCount, i, ""));
         }
-        _rowCount++;
+        RowCount++;
     }
     
     public Row() {}
-    
+
     public void AddCell()
     {
         Cells.Add(new Cell(Cells[0].Coordinates.Row, Cells.Count, ""));

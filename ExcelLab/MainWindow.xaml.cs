@@ -24,23 +24,6 @@ namespace ExcelLab
         public MainWindow()
         {
             InitializeComponent();
-
-            // for (int i = 0; i < TableViewModel.ColumnNumber; i++)
-            // {
-            //     var column = new DataGridTextColumn
-            //     {
-            //         Header = ((char)('A' + i)).ToString(),
-            //         Width = 50,
-            //         Binding = new Binding($"Cells[{i}].Content") {UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged}
-            //     };
-            //     
-            //     TableDataGrid.Columns.Add(column);
-            // }
-        }
-
-        private void TableDataGrid_OnLoadingRow(object? sender, DataGridRowEventArgs e)
-        {
-            e.Row.Header = (e.Row.GetIndex() + 1).ToString();
         }
     }
 }

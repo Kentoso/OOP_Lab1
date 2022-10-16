@@ -1,12 +1,147 @@
-﻿<UserControl x:Class="ExcelLab.Views.Table"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:ExcelLab.Views"
-             mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        
-    </Grid>
+﻿<UserControl
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    mc:Ignorable="d"
+    x:Class="ExcelLab.Views.Table"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
+    xmlns:local="clr-namespace:ExcelLab"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- <UserControl.DataContext> -->
+    <!--     <local:TableViewModel /> -->
+    <!-- </UserControl.DataContext> -->
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top">
+            <Menu>
+                <MenuItem Header="_File">
+                    <MenuItem
+                        Command="{Binding DataContext.DisplayMenuCommand, RelativeSource={RelativeSource AncestorType=local:MainWindow}}"
+                        Header="Return To Menu"
+                        IsCheckable="False" />
+                    <MenuItem
+                        Command="{Binding NewTableCommand}"
+                        Header="New"
+                        IsCheckable="False" />
+                    <MenuItem
+                        Command="{Binding OpenTableCommand}"
+                        Header="Open..."
+                        IsCheckable="False" />
+                    <MenuItem
+                        Command="{Binding SaveTableCommand}"
+                        Header="Save as..."
+                        IsCheckable="False" />
+                </MenuItem>
+                <MenuItem Header="_Table">
+                    <MenuItem
+                        Command="{Binding AddColumnCommand}"
+                        Header="Add Column"
+                        IsCheckable="False" />
+                    <MenuItem
+                        Command="{Binding AddRowCommand}"
+                        Header="Add Row"
+                        IsCheckable="False" />
+                    <MenuItem
+                        Command="{Binding RemoveColumnCommand}"
+                        Header="Remove Column"
+                        IsCheckable="False" />
+                    <MenuItem
+                        Command="{Binding RemoveRowCommand}"
+                        Header="Remove Row"
+                        IsCheckable="False" />
+                </MenuItem>
+            </Menu>
+            <Border Padding="15">
+                <Border.Background>
+                    <SolidColorBrush Color="SeaGreen" />
+                </Border.Background>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <Label
+                        Content="{Binding LatestSyntaxError}"
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Foreground="White" />
+                    <TextBox
+                        FontSize="14"
+                        Grid.Column="1"
+                        Height="24"
+                        Text="{Binding CurrentCell.Content, UpdateSourceTrigger=PropertyChanged}"
+                        VerticalAlignment="Center">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="LostFocus">
+                                <i:InvokeCommandAction Command="{Binding CellEditEndedCommand}" PassEventArgsToCommand="True" />
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="GotFocus">
+                                <i:InvokeCommandAction Command="{Binding CellEditBeganCommand}" PassEventArgsToCommand="True" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </TextBox>
+                </Grid>
+            </Border>
+        </StackPanel>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="PreviewMouseWheel">
+                    <i:InvokeCommandAction Command="{Binding ScrollCommand}" PassEventArgsToCommand="True" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <DataGrid
+                AutoGenerateColumns="False"
+                CanUserAddRows="False"
+                CanUserReorderColumns="False"
+                CanUserSortColumns="False"
+                ItemsSource="{Binding Table.Rows}"
+                LoadingRow="TableDataGrid_OnLoadingRow"
+                RowHeaderWidth="25"
+                RowHeight="30"
+                SelectionMode="Single"
+                SelectionUnit="Cell">
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="FontSize" Value="12" />
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="White" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.CellStyle>
+                <DataGrid.RowHeaderStyle>
+                    <Style TargetType="DataGridRowHeader">
+                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        <Setter Property="Padding" Value="10,0,0,0" />
+                        <Setter Property="MinHeight" Value="20" />
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="LightGray" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowHeaderStyle>
+                <DataGrid.Resources>
+                    <SolidColorBrush Color="Transparent" x:Key="{x:Static SystemColors.HighlightBrushKey}" />
+                    <SolidColorBrush Color="Black" x:Key="{x:Static SystemColors.HighlightTextBrushKey}" />
+                </DataGrid.Resources>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectedCellsChanged">
+                        <i:InvokeCommandAction Command="{Binding SelectCellCommand}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="Loaded">
+                        <i:InvokeCommandAction Command="{Binding DataGridLoadedCommand}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="BeginningEdit">
+                        <i:InvokeCommandAction Command="{Binding CellEditBeganCommand}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="CellEditEnding">
+                        <i:InvokeCommandAction Command="{Binding CellEditEndedCommand}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </DataGrid>
+        </ScrollViewer>
+    </DockPanel>
 </UserControl>

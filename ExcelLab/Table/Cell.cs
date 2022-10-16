@@ -17,7 +17,6 @@ public class Cell
     public List<Cell> Dependents;
     public string ParsedContent { get; set; }
     public string Content { get; set; }
-    private string _previousContent { get; set; }
 
     public string ViewContent
     {
@@ -44,11 +43,10 @@ public class Cell
     public Cell(int row, int col, string content)
     {
         Coordinates = (row, col);
-        ViewContent = content;
         Error = ErrorStates.None;
         Dependencies = new List<Cell>();
         Dependents = new List<Cell>();
-        Content = "";
+        Content = content;
         ParsedContent = "";
     }
     

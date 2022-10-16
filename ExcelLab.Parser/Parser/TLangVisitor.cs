@@ -63,7 +63,7 @@ public class TLangVisitor : TLangBaseVisitor<double>
         var first = Visit(context.expression()[0]);
         var second = Visit(context.expression()[1]);
         if (first > second) return 1;
-        else if (Math.Abs(first - second) < first * 1e-10) return 0;
+        else if (Math.Abs(first - second) <= Math.Abs(first * 1e-10)) return 0;
         else return -1;
     }
 

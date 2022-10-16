@@ -12,17 +12,13 @@ namespace ExcelLab;
 
 public class CellContentConverter
 {
-    private static CellContentConverter _instance;
+    private static CellContentConverter? _instance;
 
     public static CellContentConverter Instance
     {
         get
         {
-            if (_instance == null)
-            {
-                _instance = new CellContentConverter();
-            }
-            return _instance;
+            return _instance ??= new CellContentConverter();
         }
     }
 
@@ -93,6 +89,7 @@ public class CellContentConverter
                 if (addressedCell == null) return null; 
                 var addressedCellContent = addressedCell.Content.Trim() == "" ? "0" : addressedCell.Content;
                 contentCopy = contentCopy.Replace($"|{a}|", $"({addressedCellContent})");
+                contentCopy = PreprocessAddressRange(contentCopy);
             }
             matches = addressRegex.Matches(contentCopy);
         }
@@ -121,7 +118,7 @@ public class CellContentConverter
         }
     }
 
-    public string PreprocessAddressRange(string content)
+    private string PreprocessAddressRange(string content)
     {
         Regex addressRegex = new Regex(@"(?<=\|)[A-Z]+[1-9][0-9]*:[A-Z]+[1-9][0-9]*(?=\|)", RegexOptions.IgnoreCase);
         var matches = addressRegex.Matches(content);
@@ -133,15 +130,8 @@ public class CellContentConverter
             var startAddress = value.Substring(0, colonIndex);
             var endAddress = value.Substring(colonIndex + 1);
             
-            var startFirstNumIndex = startAddress.IndexOfAny("0123456789".ToCharArray());
-            var startColumnStr = startAddress.Substring(0, startFirstNumIndex).ToUpper();
-            int startRow = Int32.Parse(startAddress.Substring(startFirstNumIndex));
-            int startCol = TableData.DecodeColumnHeader(startColumnStr);
-
-            var endFirstNumIndex = endAddress.IndexOfAny("0123456789".ToCharArray());
-            var endColumnStr = endAddress.Substring(0, endFirstNumIndex).ToUpper();
-            int endRow = Int32.Parse(endAddress.Substring(endFirstNumIndex));
-            int endCol = TableData.DecodeColumnHeader(endColumnStr);
+            (int startRow, int startCol) = AddressToNumbers(startAddress);
+            (int endRow, int endCol) = AddressToNumbers(endAddress);
             
             string result = "";
             for (int i = startRow; i <= endRow; i++)
@@ -156,5 +146,14 @@ public class CellContentConverter
             contentCopy = contentCopy.Replace($"|{match.Value}|", result);
         }
         return contentCopy;
+    }
+
+    private (int, int) AddressToNumbers(string address)
+    {
+        var firstNumIndex = address.IndexOfAny("0123456789".ToCharArray());
+        var columnStr = address.Substring(0, firstNumIndex).ToUpper();
+        int row = Int32.Parse(address.Substring(firstNumIndex));
+        int col = TableData.DecodeColumnHeader(columnStr);
+        return (row, col);
     }
 }
